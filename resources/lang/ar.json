@@ -149,7 +149,7 @@
     "City": "المدينة",
     "driving-certificate": "رخصة القيادة",
     "vehicle-license": "رخصة السيارة",
-    "identification-card": "البطاقة الشخصية", 
+    "identification-card": "البطاقة الشخصية",
     "vehicle-insurance":"تآمين السيارة",
     "identification-card,uploaded":"بطاقة الهوية ,uploaded",
     "identification-card,expired":"بطاقة الهوية ,expired",
@@ -412,5 +412,6 @@
     "Invoice was created on a computer automatic and is valid without the signature and seal." :"تم إنشاء الفاتورة تلقائيًا على جهاز كمبيوتر وهي صالحة بدون التوقيع والختم.",
     "try again after min" : "برجاء المحاولة بعد :minutes دقيقة",
     "Negative Wallet Limit" : "تجازت حد المحفظة بالسالب",
-    "We believe you are not our registered hero" :"نعتقد انك ليس الهيرو المسجل لدينا"
+    "We believe you are not our registered hero" :"نعتقد انك ليس الهيرو المسجل لدينا",
+    "Internal Error" : "خطأ في السيرفر"
 }

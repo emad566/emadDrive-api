@@ -394,5 +394,6 @@
     "Invoice was created on a computer automatic and is valid without the signature and seal." :"Invoice was created on a computer automatic and is valid without the signature and seal.",
     "try again after min" : "Try Again After :minutes minute",
     "Negative Wallet Limit" : "Negative Wallet Limit",
-    "We believe you are not our registered hero" :"We believe you are not our registered hero"
+    "We believe you are not our registered hero" :"We believe you are not our registered hero",
+    "Internal Error" :"Internal Error"
 }

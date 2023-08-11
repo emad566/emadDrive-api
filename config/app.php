@@ -115,11 +115,11 @@ return [
     'faker_locale' => 'en_US',
     /*
     |--------------------------------------------------------------------------
-    | File Base Url 
+    | File Base Url
     |--------------------------------------------------------------------------
     |
-    | This key is used for get image from AtmoDrive dashboard project it's a master 
-    |   "container" of image 
+    | This key is used for get image from AtmoDrive dashboard project it's a master
+    |   "container" of image
     |
     */
     'APP_FILL_URL' => env('APP_FILE_URL', 'https://AtmoDrive-dashboard.dev/'),
@@ -191,7 +191,7 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Laravel\Passport\PassportServiceProvider::class,
+//        Laravel\Passport\PassportServiceProvider::class,
     ],
 
     /*

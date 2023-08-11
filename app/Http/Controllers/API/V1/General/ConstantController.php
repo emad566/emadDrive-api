@@ -128,5 +128,11 @@ class ConstantController extends Controller
     const VERIFICATION_CODE = 'verification_code';
     const PROFILE = 'profile';
     const EMAIL = 'email';
+    const CHECk = 'check';
+    const ACCEPT_LANGUAGE = 'Accept-Language';
+    const SUCCESS = 'success';
+    const MESSAGE = 'message';
+    const TOKEN_PASSENGER = 'Token-Passenger';
+    const TOKEN_CAPTAIN = 'Token-Captain';
 
 }

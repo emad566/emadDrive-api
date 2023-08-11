@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\API\V1\Captains\Auth;
 
+use App\Models\Captain;
+use App\Models\Passenger;
+use App\Services\SendCode;
+use App\Services\UpdateToken;
 use Carbon\Carbon;
 use App\Models\Verify;
-use App\Models\Captain;
 use App\Services\Check;
 use Illuminate\Http\Request;
 use App\Jobs\SendNotification;
@@ -28,110 +31,171 @@ class AuthController extends Controller
 
     public function sendCode(LoginRequest $request)
     {
-        // 1 - Get Captain and Set Locale Lang
+        try {
+            // Get Model and Set Locale Lang
+            $captain = Captain::where('mobile', $request->mobile)->first();
 
-        // 2 - Check Number Of Try OTP
+            // Send Code and return response
+            $sendCode =  new SendCode();
+            return $sendCode->send($captain, $request->mobile);
 
-        // 3 - Set OTP and Store with Expire at Verify Model
-
-        return $this->successStatus('Send SMS Successfully Please Check Your Phone');
+        } catch (\Throwable $th) {
+            return $this->errorInternalError();
+        }
     }
 
     public function check(VerifyRequest $request)
     {
+        try {
+            // Check OTP using Check::CheckCode -> if success false return error
+            $response = Check::CheckCode($request);
+            if(!$response[ConstantController::SUCCESS]){
+                return $this->errorStatus($response[ConstantController::MESSAGE]);
+            }
 
-        // 1- Check OTP using Check::CheckCode -> if success false return error
+            // Check if Model Old -> if new return response new user respondNewUser(true)
+            $captain = Captain::where('mobile', $request->mobile)->first();
+            if(!$captain) return  $this->respondNewUser(true);
 
-        // 2- Check if Capain Old -> if new return response new user respondNewUser(true)
+            // Update Token
+            DB::beginTransaction();
+            $captain = UpdateToken::update(
+                $captain,
+                $request->header('platform') == 1? 'android' : 'ios',
+                $request->device_token,
+                'passenger'
+            );
+            DB::commit();
 
-        // 3- Set Captain Locale Lang app()->setLocale
-
-        // 4 - Delete Old Captain Token from table oauth_access_tokens
-
-        // 5 - Create New Token
-        //$token = $captain->createToken('Token-Captain', ['allow-captain'])->accessToken;
-
-        // 6 - Set token "remember_token" and device_token at Captain
-
-
-        // 7 - Set Device Type and Token at $captain->tokenable()
-
-
-        // 8 - Check Captain Wallet if not exsist create new
-
-        // 9 - Return Captain Data
-
+            // Return passenger Data
+            return $this->respondWithItem($captain);
+        } catch (\Throwable $th) {
+            return $this->errorInternalError();
+        }
     }
 
     public function registerCaptain(RegisterRequest $request)
     {
-        // 1- Create Captain
-        /**
-         * 'captain_code' => generateRandomCode('CPT'),
-         * mobile
-         * 'gender' => 'male',
-         * avatar
-         * device_token
-         * 'register_step' => ConstantController::REGISTER_STEP_ONE,
-         * lang
-         */
+        try {
+            DB::beginTransaction();
+            // Create Captain
+            $captain = Captain::create([
+                'register_step' => ConstantController::REGISTER_STEP_ONE,
+                'captain_code' => generateRandomCode('CPT'),
+                'full_name' => $request->full_name,
+                'mobile' => $request->mobile,
+                'gender' => 'male',
+                'avatar' => $request->avatar,
+                'device_token' => $request->device_token,
+                'lang' => $request->header(ConstantController::ACCEPT_LANGUAGE)?? 'en',
+                'password'=> $request->password?? '',
+            ]);
 
-        // 2- Create Capatin Document
-        /**
-         *
-         * $captain->documents()
-         * $request->get('files')[0] => ConstantController::NATIONAL_ID_FRONT
-         * $request->get('files')[1] => ConstantController::NATIONAL_ID_BACK
-         *
-         */
+            // 2- Create Captain Document
+            $captain->documents()->createMany([
+                [
+                    'name' => ConstantController::NATIONAL_ID_FRONT,
+                    'file' => $request->get('files')[0],
+                ],
+                [
+                    'name' => ConstantController::NATIONAL_ID_BACK,
+                    'file' => $request->get('files')[1],
+                ],
 
-        // 3 - Create New Token
-        //$token = $captain->createToken('Token-Captain', ['allow-captain'])->accessToken;
+            ]);
 
-        // 4 - Set token "remember_token"  at Captain
+            // Update Token
+            $captain = UpdateToken::update(
+                $captain,
+                $request->header('platform') == 1? 'android' : 'ios',
+                $request->device_token,
+                'captain'
+            );
 
+            DB::commit();
 
-        // 5 - Set Device Type , Device ID and Token at $captain->tokenable()
-
-
-
-        // 6- Create Wallet for Captain
-
-
-        // 7- return $this->respondRegisterStepOne($token, ConstantController::REGISTER_STEP_ONE);
+            // Return Model Data
+            $captain = Captain::find($captain->id);
+            return $this->respondRegisterStepOne($captain->remember_token, ConstantController::REGISTER_STEP_ONE);
+        } catch (\Throwable $th) {
+            return $this->errorInternalError();
+        }
     }
 
     public function registerVehicle(RegisterVehicleRequest $request)
     {
-        // 1- Update register_step to ConstantController::REGISTER_STEP_TWO
+        try {
+            DB::beginTransaction();
+            // Update register_step to ConstantController::REGISTER_STEP_TWO
+            $captain = Auth::guard('captain')->user();
+            $captain->update([ 'register_step' => ConstantController::REGISTER_STEP_TWO]);
 
-        // 2- Create CaptainVehicle
+            // Create CaptainVehicle
+            $vehicle = CaptainVehicle::create(['captain_id'=>$captain->id]);
 
-        // 3 - Store  $request->images at vehicleMedias()
-        //$request['names'] = ConstantController::VEHCICLE_IMAGES;
+            // Store  $request->images at vehicleMedias()
+            $vehicle_images = [];
 
-        // 4 - Create Captain Document for Vechile
-        /**
-         *
-         * CaptainDocument
-         * $request->get('files')[0] => ConstantController::VEHICLE_LICENSE_FRONT
-         * $request->get('files')[1] => ConstantController::VEHICLE_LICENSE_BACK
-         *
-         */
+            foreach ($request->images as $key => $vehicle_image){
+                $vehicle_images[] = [
+                    'image' => $vehicle_image,
+                    'name' => $key,
+                ];
+            }
+            $vehicle->vehicleMedias()->createMany($vehicle_images);
 
-        $title = __('Register');
-        $body = __('The registration has been completed successfully. The application will be reviewed by the administration');
-        //SendNotification::dispatch(Auth::guard('captain')->user(), $title, $body, TypeConstant::NEW_CAR); ##Queue
+            // 4 - Create Captain Document for Vehicle
+            if($request->get('files')[0]){
+                CaptainDocument::create([
+                    'captain_id'=> $captain->id,
+                    'file'=> $request->get('files')[0],
+                    'name'=> ConstantController::VEHICLE_LICENSE_FRONT,
+                    'vehicle_id'=> $vehicle->id,
+                ]);
+            }
 
-        return $this->successStatus('Vehicle register successfully');
+            if($request->get('files')[1]){
+                CaptainDocument::create([
+                    'captain_id'=> $captain->id,
+                    'file'=> $request->get('files')[1],
+                    'name'=> ConstantController::VEHICLE_LICENSE_BACK,
+                    'vehicle_id'=> $vehicle->id,
+                ]);
+            }
+            DB::commit();
+
+            $title = __('Register');
+            $body = __('The registration has been completed successfully. The application will be reviewed by the administration');
+            //SendNotification::dispatch(Auth::guard('captain')->user(), $title, $body, TypeConstant::NEW_CAR); ##Queue
+
+            return $this->successStatus('Vehicle register successfully');
+
+        } catch (\Throwable $th) {
+            return $this->errorInternalError();
+        }
     }
 
     public function registerBankAccount(BankAccountRequest $request)
     {
-        // 1- Update register_step to ConstantController::REGISTER_STEP_THREE
+        try {
+            DB::beginTransaction();
+            // Update register_step to ConstantController::REGISTER_STEP_THREE
+            $captain = Auth::guard('captain')->user();
+            $captain->update([ 'register_step' => ConstantController::REGISTER_STEP_THREE]);
 
-        // 2- Create Bank Accout For Captain
+            // Create Bank Accout For Captain
+            CaptainBankAccount::create([
+                'captain_id' => $captain->id,
+                'bank_name' => $request->bank_name,
+                'iban_number' => $request->iban_number,
+                'account_name' => $request->account_name,
+                'account_number' => $request->account_number,
+            ]);
+            DB::commit();
 
-        return $this->successStatus(__('Bank register successfully'));
+            return $this->successStatus(__('Bank register successfully'));
+        } catch (\Throwable $th) {
+            return $this->errorInternalError();
+        }
     }
 }

@@ -17,7 +17,7 @@ trait ApiResponder
     public function getStatusCode()
     {
         return $this->statusCode;
-    } 
+    }
      /**
      * Getter for statusCode
      *
@@ -96,13 +96,13 @@ trait ApiResponder
     }
     public function respondWithItem($item,$message = 'Success Request')
     {
-        
+
         return $this->respond([
             'status' => $this->getSuccess(),
             'message' => __($message),
             'data' => $item,
         ]);
-    } 
+    }
     public function respondWithItemName($item_name,$item, $message = 'Success Request')
     {
         return $this->respond([
@@ -111,7 +111,7 @@ trait ApiResponder
             $item_name => $item,
         ]);
     }
-   
+
     public function respondWithCollection($collection,$message='Success Request')
     {
         return $this->respond([
@@ -160,7 +160,7 @@ trait ApiResponder
         return $this->respond([
             'http_code' => $this->getStatusCode(),
             'error' => [
-                'message' => __($message),
+                'message' => __('Internal Error'),
             ]
         ]);
     }

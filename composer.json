@@ -24,6 +24,7 @@
         "laravel/tinker": "^2.5",
         "opcodesio/log-viewer": "^1.9",
         "orbitale/imagemagick-php": "^3.3",
+        "php-open-source-saver/jwt-auth": "^2.1",
         "pusher/pusher-php-server": "^4.1",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/laravel-activitylog": "^3.9.1",
