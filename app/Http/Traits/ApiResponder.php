@@ -2,12 +2,26 @@
 
 namespace App\Http\Traits;
 
+use Illuminate\Support\Facades\App;
+
 trait ApiResponder
 {
 
     protected $statusCode = 200;
     protected $success = 1;
     protected $failure = 0;
+    protected $is_debug = false;
+    protected $catch_error;
+
+    function __construct (){
+        $this->is_debug = App::hasDebugModeEnabled();
+    }
+
+    public function setCatchError($th=null){
+
+        $this->catch_error = ($th != null && $this->is_debug )  ? $th->getMessage() . ": line"."[".$th->getLine()."]" : 'Release Mode';
+        return $this;
+    }
 
     /**
      * Getter for statusCode
@@ -96,7 +110,6 @@ trait ApiResponder
     }
     public function respondWithItem($item,$message = 'Success Request')
     {
-
         return $this->respond([
             'status' => $this->getSuccess(),
             'message' => __($message),
@@ -160,6 +173,7 @@ trait ApiResponder
         return $this->respond([
             'http_code' => $this->getStatusCode(),
             'error' => [
+                'catch_error' => $this->catch_error,
                 'message' => __('Internal Error'),
             ]
         ]);
@@ -180,9 +194,10 @@ trait ApiResponder
      *
      * @return Response
      */
-    public function errorInternalError($message = 'Internal Error')
+    public function errorInternalError($message = 'Internal Error', $th=null)
     {
-        return $this->setStatusCode(500)->respondWithError($message);
+
+        return $this->setStatusCode(500)->setCatchError($th)->respondWithError($message);
     }
 
     /**

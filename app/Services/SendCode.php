@@ -16,7 +16,7 @@ class SendCode {
     public function send($model, $mobile): JsonResponse
     {
         if($model){
-            app()->setLocale($model->lang);
+            app()->setLocale($model->lang?? 'en');
         }
 
         // 2 - Check Number Of Try OTP

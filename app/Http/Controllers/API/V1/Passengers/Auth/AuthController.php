@@ -4,13 +4,11 @@ namespace App\Http\Controllers\API\V1\Passengers\Auth;
 
 use App\Http\Controllers\API\V1\General\ConstantController;
 use App\Services\SendCode;
-use Carbon\Carbon;
-use App\Models\Verify;
 use App\Models\Passenger;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Passengers\Auth\LoginRequest;
 use App\Http\Requests\Passengers\Auth\VerifyRequest;
-use App\Http\Resources\Passengers\PassengerResource;
+use App\Http\Resources\PassengerResource;
 use App\Http\Requests\Passengers\Auth\RegisterRequest;
 use App\Services\Check;
 use App\Services\UpdateToken;
@@ -33,7 +31,7 @@ class AuthController extends Controller
             $sendCode =  new SendCode();
             return $sendCode->send($passenger, $request->mobile);
         } catch (\Throwable $th) {
-            return $this->errorInternalError();
+            return $this->errorInternalError(th: $th);
         }
     }
 
@@ -65,9 +63,9 @@ class AuthController extends Controller
             DB::commit();
 
             // Return passenger Data
-            return $this->respondWithItem($passenger);
+            return $this->respondWithItem(new PassengerResource($passenger));
         } catch (\Throwable $th) {
-            return $this->errorInternalError();
+            return $this->errorInternalError(th: $th);
         }
 
     }
@@ -108,7 +106,7 @@ class AuthController extends Controller
             $passenger = Passenger::find($passenger->id);
             return $this->respondWithItem($passenger);
         } catch (\Throwable $th) {
-            return $this->errorInternalError();
+            return $this->errorInternalError(th: $th);
         }
     }
 }

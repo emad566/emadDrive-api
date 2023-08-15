@@ -45,7 +45,8 @@ You can now access the server at http://localhost:8000
     cp .env.example .env
     php artisan key:generate
     php artisan jwt:generate 
-    
+    php artisan passport:client --personal
+
 **Make sure you set the correct database connection information before running the migrations** [Environment variables](#environment-variables)
 
     php artisan serve

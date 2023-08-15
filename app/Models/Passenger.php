@@ -16,7 +16,28 @@ class Passenger extends Authenticatable
     protected $guard = 'passenger';
 
     protected $fillable = [
-        'passenger_code', 'donation','donation_id','full_name', 'gender', 'mobile', 'country_code', 'email', 'password', 'verified_at', 'avatar', 'city_id', 'remember_token','device_token','shake_phone', 'health_condition_id','rate', 'vat', 'status', 'suspend','is_dark_mode','lang'
+        'passenger_code',
+        'donation',
+        'donation_id',
+        'full_name',
+        'gender',
+        'mobile',
+        'country_code',
+        'email',
+        'password',
+        'verified_at',
+        'avatar',
+        'city_id',
+        'remember_token',
+        'device_token',
+        'shake_phone',
+        'health_condition_id',
+        'rate',
+        'vat',
+        'status',
+        'suspend',
+        'is_dark_mode',
+        'lang',
     ];
 
    // public $with = ['favorites'];

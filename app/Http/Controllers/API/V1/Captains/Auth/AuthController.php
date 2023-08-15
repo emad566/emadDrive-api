@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\API\V1\Captains\Auth;
 
+use App\Http\Resources\CaptainResource;
 use App\Models\Captain;
-use App\Models\Passenger;
 use App\Services\SendCode;
 use App\Services\UpdateToken;
-use Carbon\Carbon;
-use App\Models\Verify;
 use App\Services\Check;
-use Illuminate\Http\Request;
 use App\Jobs\SendNotification;
 use App\Models\CaptainVehicle;
 use App\Models\CaptainBankAccount;
@@ -40,7 +37,7 @@ class AuthController extends Controller
             return $sendCode->send($captain, $request->mobile);
 
         } catch (\Throwable $th) {
-            return $this->errorInternalError();
+            return $this->errorInternalError(th: $th);
         }
     }
 
@@ -63,14 +60,15 @@ class AuthController extends Controller
                 $captain,
                 $request->header('platform') == 1? 'android' : 'ios',
                 $request->device_token,
-                'passenger'
+                'captain'
             );
             DB::commit();
 
             // Return passenger Data
-            return $this->respondWithItem($captain);
+
+            return $this->respondWithItem(new CaptainResource($captain));
         } catch (\Throwable $th) {
-            return $this->errorInternalError();
+            return $this->errorInternalError(th: $th);
         }
     }
 
@@ -118,7 +116,7 @@ class AuthController extends Controller
             $captain = Captain::find($captain->id);
             return $this->respondRegisterStepOne($captain->remember_token, ConstantController::REGISTER_STEP_ONE);
         } catch (\Throwable $th) {
-            return $this->errorInternalError();
+            return $this->errorInternalError(th: $th);
         }
     }
 
@@ -135,7 +133,6 @@ class AuthController extends Controller
 
             // Store  $request->images at vehicleMedias()
             $vehicle_images = [];
-
             foreach ($request->images as $key => $vehicle_image){
                 $vehicle_images[] = [
                     'image' => $vehicle_image,
@@ -168,10 +165,10 @@ class AuthController extends Controller
             $body = __('The registration has been completed successfully. The application will be reviewed by the administration');
             //SendNotification::dispatch(Auth::guard('captain')->user(), $title, $body, TypeConstant::NEW_CAR); ##Queue
 
-            return $this->successStatus('Vehicle register successfully');
+            return $this->respondRegisterSteps(ConstantController::REGISTER_STEP_TWO);
 
         } catch (\Throwable $th) {
-            return $this->errorInternalError();
+            return $this->errorInternalError(th: $th);
         }
     }
 
@@ -193,9 +190,9 @@ class AuthController extends Controller
             ]);
             DB::commit();
 
-            return $this->successStatus(__('Bank register successfully'));
+            return $this->respondRegisterSteps(ConstantController::REGISTER_STEP_THREE, 'Bank register successfully');
         } catch (\Throwable $th) {
-            return $this->errorInternalError();
+            return $this->errorInternalError(th: $th);
         }
     }
 }
