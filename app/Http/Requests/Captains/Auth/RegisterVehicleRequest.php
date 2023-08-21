@@ -40,10 +40,20 @@ class RegisterVehicleRequest extends APIRequest
             'insurance_company_name' => 'required|min:3|max:100',
         ];*/
         return [
-            "files"    => "required|array|min:1",
-            //"files.*"  => "required|min:3",
-            "images"    => "required|array|min:6",
-            "images.*"  => "required|min:3",
+            'registration_plate' => 'required|min:6|max:6|unique:captain_vehicles,registration_plate',
+            'brand' => 'required|min:2|max:20',
+            'model' => 'required|min:2|max:20',
+            'model_date' => 'required|numeric|min:2000|max:2030',
+            'color' => 'required|min:3|max:20',
+            'vehicle_front' => 'required|min:5|max:191',
+            'vehicle_back' => 'required|min:5|max:191',
+            'vehicle_left' => 'required|min:5|max:191',
+            'vehicle_right' => 'required|min:5|max:191',
+            'vehicle_front_seat' => 'required|min:5|max:191',
+            'vehicle_back_seat' => 'required|min:5|max:191',
+            'vehicle_license_front' => 'required|min:5|max:191',
+            'vehicle_license_back' => 'required|min:5|max:191',
+            'vehicle_license_expire_date' => 'required|date_format:Y-m-d|after:yesterday',
         ];
     }
 }

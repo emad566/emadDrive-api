@@ -16,39 +16,7 @@ class Captain extends Authenticatable
 
     protected $guard = 'captain';
 
-    protected $fillable = [
-        'is_active',
-        'suspend',
-        'available',
-        'status',
-        'rate',
-        'total_km',
-        'city_id',
-        'national_expiry_date',
-        'license_expiry_date',
-        'nationality',
-        'national_id',
-        'remember_token',
-        'device_token',
-        'avatar',
-        'verified_at',
-        'password',
-        'email',
-        'country_code',
-        'mobile',
-        'blood_type',
-        'birthplace',
-        'in_trip',
-        'birthday',
-        'gender',
-        'full_name',
-        'captain_code',
-        'register_step',
-        'rank',
-        'is_dark_mode',
-        'lang',
-        'is_have_max_amount'
-    ];
+    protected $guarded = [];
 
     protected $appends = ['name'];
 

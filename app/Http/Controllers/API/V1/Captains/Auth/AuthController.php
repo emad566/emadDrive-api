@@ -76,31 +76,30 @@ class AuthController extends Controller
     {
         try {
             DB::beginTransaction();
-            // Create Captain
             $captain = Captain::create([
                 'register_step' => ConstantController::REGISTER_STEP_ONE,
                 'captain_code' => generateRandomCode('CPT'),
                 'full_name' => $request->full_name,
+                'gender' => $request->gender,
+                'birthday' => $request->birthday,
                 'mobile' => $request->mobile,
-                'gender' => 'male',
+                'email' => $request->email,
+                'password' => $request->password,
+                'city' => $request->city,
                 'avatar' => $request->avatar,
                 'device_token' => $request->device_token,
+                'device_id' => $request->device_id,
+                'device_type' => $request->device_type,
                 'lang' => $request->header(ConstantController::ACCEPT_LANGUAGE)?? 'en',
-                'password'=> $request->password?? '',
+                'national_id_front' => $request->national_id_front,
+                'national_id_back' => $request->national_id_back,
+                'national_expiry_date' => $request->national_expiry_date,
+                'driving_license_front' => $request->driving_license_front,
+                'driving_license_back' => $request->driving_license_back,
+                'license_expiry_date' => $request->license_expiry_date,
+                'is_dark_mode' => $request->is_dark_mode,
             ]);
 
-            // 2- Create Captain Document
-            $captain->documents()->createMany([
-                [
-                    'name' => ConstantController::NATIONAL_ID_FRONT,
-                    'file' => $request->get('files')[0],
-                ],
-                [
-                    'name' => ConstantController::NATIONAL_ID_BACK,
-                    'file' => $request->get('files')[1],
-                ],
-
-            ]);
 
             // Update Token
             $captain = UpdateToken::update(
@@ -129,36 +128,25 @@ class AuthController extends Controller
             $captain->update([ 'register_step' => ConstantController::REGISTER_STEP_TWO]);
 
             // Create CaptainVehicle
-            $vehicle = CaptainVehicle::create(['captain_id'=>$captain->id]);
+            $vehicle = CaptainVehicle::create([
+                'captain_id'=>$captain->id,
+                'registration_plate' => $request->registration_plate,
+                'brand' => $request->brand,
+                'model' => $request->model,
+                'model_date' => $request->model_date,
+                'color' => $request->color,
+                'vehicle_front' => $request->vehicle_front,
+                'vehicle_back' => $request->vehicle_back,
+                'vehicle_left' => $request->vehicle_left,
+                'vehicle_right' => $request->vehicle_right,
+                'vehicle_front_seat' => $request->vehicle_front_seat,
+                'vehicle_back_seat' => $request->vehicle_back_seat,
+                'vehicle_license_front' => $request->vehicle_license_front,
+                'vehicle_license_back' => $request->vehicle_license_back,
+                'vehicle_license_expire_date' => $request->vehicle_license_expire_date,
+            ]);
 
-            // Store  $request->images at vehicleMedias()
-            $vehicle_images = [];
-            foreach ($request->images as $key => $vehicle_image){
-                $vehicle_images[] = [
-                    'image' => $vehicle_image,
-                    'name' => $key,
-                ];
-            }
-            $vehicle->vehicleMedias()->createMany($vehicle_images);
-
-            // 4 - Create Captain Document for Vehicle
-            if($request->get('files')[0]){
-                CaptainDocument::create([
-                    'captain_id'=> $captain->id,
-                    'file'=> $request->get('files')[0],
-                    'name'=> ConstantController::VEHICLE_LICENSE_FRONT,
-                    'vehicle_id'=> $vehicle->id,
-                ]);
-            }
-
-            if($request->get('files')[1]){
-                CaptainDocument::create([
-                    'captain_id'=> $captain->id,
-                    'file'=> $request->get('files')[1],
-                    'name'=> ConstantController::VEHICLE_LICENSE_BACK,
-                    'vehicle_id'=> $vehicle->id,
-                ]);
-            }
+            
             DB::commit();
 
             $title = __('Register');
