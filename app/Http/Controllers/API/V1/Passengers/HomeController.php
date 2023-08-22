@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\V1\Passengers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponder;
+use App\Services\PassengerHome;
 use Illuminate\Support\Facades\Auth;
 
 class   HomeController extends Controller
@@ -18,20 +19,7 @@ class   HomeController extends Controller
     {
         try {
             $passenger = Auth::user();
-            $data = [
-                'passenger_code' => $passenger->passenger_code,
-                'full_name' => $passenger->full_name,
-                'gender' => $passenger->gender,
-                'mobile' => $passenger->mobile,
-                'email' => $passenger->email,
-                'avatar' => $passenger->avatar,
-                'shake_phone' => $passenger->shake_phone,
-                'vat' => $passenger->vat,
-                'status' => $passenger->status,
-                'is_dark_mode' => $passenger->is_dark_mode,
-                'lang' => $passenger->lang,
-            ];
-            return $this->respondWithItem($data);
+            return $this->respondWithItem(PassengerHome::Details($passenger));
         } catch (\Throwable $th) {
             return $this->errorInternalError();
         }

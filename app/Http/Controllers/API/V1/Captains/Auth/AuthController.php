@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\V1\Captains\Auth;
 
 use App\Http\Resources\CaptainResource;
 use App\Models\Captain;
+use App\Services\CaptainHome;
 use App\Services\SendCode;
 use App\Services\UpdateToken;
 use App\Services\Check;
@@ -64,9 +65,8 @@ class AuthController extends Controller
             );
             DB::commit();
 
-            // Return passenger Data
-
-            return $this->respondWithItem(new CaptainResource($captain));
+            // Return Data
+            return $this->respondWithItem(CaptainHome::Details($captain));
         } catch (\Throwable $th) {
             return $this->errorInternalError(th: $th);
         }
@@ -113,7 +113,7 @@ class AuthController extends Controller
 
             // Return Model Data
             $captain = Captain::find($captain->id);
-            return $this->respondRegisterStepOne($captain->remember_token, ConstantController::REGISTER_STEP_ONE);
+            return $this->respondWithItem(CaptainHome::Details($captain));
         } catch (\Throwable $th) {
             return $this->errorInternalError(th: $th);
         }
@@ -146,14 +146,14 @@ class AuthController extends Controller
                 'vehicle_license_expire_date' => $request->vehicle_license_expire_date,
             ]);
 
-            
+
             DB::commit();
 
             $title = __('Register');
             $body = __('The registration has been completed successfully. The application will be reviewed by the administration');
             //SendNotification::dispatch(Auth::guard('captain')->user(), $title, $body, TypeConstant::NEW_CAR); ##Queue
 
-            return $this->respondRegisterSteps(ConstantController::REGISTER_STEP_TWO);
+            return $this->respondWithItem(CaptainHome::Details($captain));
 
         } catch (\Throwable $th) {
             return $this->errorInternalError(th: $th);
@@ -178,7 +178,7 @@ class AuthController extends Controller
             ]);
             DB::commit();
 
-            return $this->respondRegisterSteps(ConstantController::REGISTER_STEP_THREE, 'Bank register successfully');
+            return $this->respondWithItem(CaptainHome::Details($captain));
         } catch (\Throwable $th) {
             return $this->errorInternalError(th: $th);
         }

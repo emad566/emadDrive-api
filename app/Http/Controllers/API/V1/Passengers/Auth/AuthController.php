@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\V1\Passengers\Auth;
 
 use App\Http\Controllers\API\V1\General\ConstantController;
+use App\Services\PassengerHome;
 use App\Services\SendCode;
 use App\Models\Passenger;
 use App\Http\Controllers\Controller;
@@ -63,7 +64,7 @@ class AuthController extends Controller
             DB::commit();
 
             // Return passenger Data
-            return $this->respondWithItem(new PassengerResource($passenger));
+            return $this->respondWithItem(PassengerHome::Details($passenger));
         } catch (\Throwable $th) {
             return $this->errorInternalError(th: $th);
         }
@@ -104,7 +105,7 @@ class AuthController extends Controller
 
             // Return passenger Data
             $passenger = Passenger::find($passenger->id);
-            return $this->respondWithItem($passenger);
+            return $this->respondWithItem(PassengerHome::Details($passenger));
         } catch (\Throwable $th) {
             return $this->errorInternalError(th: $th);
         }

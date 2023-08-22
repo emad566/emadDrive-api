@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Passengers\Auth;
 
+use App\Http\Controllers\API\V1\General\OptionsController;
 use App\Rules\Phone;
 use Illuminate\Validation\Rule;
 use App\Http\Requests\APIRequest;
@@ -26,14 +27,18 @@ class RegisterRequest extends APIRequest
     public function rules()
     {
         return [
+            // Mobile UI data
             'full_name' => 'required|min:2|max:25',
-            'city_id' => 'required|numeric',
-            'country_code' => 'required|min:2',
             'mobile' => ['required','unique:passengers',new Phone],
-            'gender' => ['required', Rule::in(['male','female'])],
-            'avatar' => 'nullable',
+            'avatar' => 'nullable:min:5,max:191',
+            'device_token' => 'required|min:20|max:300',
             'device_id' => 'required',
-            'device_type' => ['required', Rule::in(['ios', 'android', 'web'])],
+            'device_type' => ['required', Rule::in(OptionsController::DEVICE_TYPES)],
+
+            // Optional data
+            'city_id' => 'nullable|numeric',
+            'country_code' => 'nullable|min:2',
+            'gender' => ['nullable', Rule::in(OptionsController::GENDER)],
         ];
     }
 }

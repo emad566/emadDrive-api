@@ -26,7 +26,6 @@ class LoginRequest extends APIRequest
     {
         return [
             'mobile' => ['required', new Phone],
-            'device_token'=>'nullable',
         ];
     }
 }

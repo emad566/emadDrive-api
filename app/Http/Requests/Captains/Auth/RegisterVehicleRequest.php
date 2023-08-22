@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Captains\Auth;
 
+use App\Http\Controllers\API\V1\General\OptionsController;
 use Illuminate\Validation\Rule;
 use App\Http\Requests\APIRequest;
 
@@ -24,27 +25,8 @@ class RegisterVehicleRequest extends APIRequest
      */
     public function rules()
     {
-        /*
         return [
-            'owner_name' => 'required|min:3|max:100',
-            'owner_national_id' => 'required|numeric',
-            'registration_plate' => 'required|unique:captain_vehicles',
-            'brand' => 'required|min:1|max:100',
-            'model' => 'required|min:2|max:100',
-            'color' => 'required|min:3|max:15',
-            'model_date' => 'required|date_format:Y-m-d',
-            'registration_type' => 'required',
-            //'class_id' => 'required',
-            'is_owner' => 'required|boolean',
-            'insurance_expire_date' => 'required|date_format:Y-m-d|before:today',
-            'insurance_company_name' => 'required|min:3|max:100',
-        ];*/
-        return [
-            'registration_plate' => 'required|min:6|max:6|unique:captain_vehicles,registration_plate',
-            'brand' => 'required|min:2|max:20',
-            'model' => 'required|min:2|max:20',
-            'model_date' => 'required|numeric|min:2000|max:2030',
-            'color' => 'required|min:3|max:20',
+            // Mobile UI
             'vehicle_front' => 'required|min:5|max:191',
             'vehicle_back' => 'required|min:5|max:191',
             'vehicle_left' => 'required|min:5|max:191',
@@ -53,7 +35,14 @@ class RegisterVehicleRequest extends APIRequest
             'vehicle_back_seat' => 'required|min:5|max:191',
             'vehicle_license_front' => 'required|min:5|max:191',
             'vehicle_license_back' => 'required|min:5|max:191',
-            'vehicle_license_expire_date' => 'required|date_format:Y-m-d|after:yesterday',
+
+            // Optional data
+            'registration_plate' => 'nullable|min:6|max:6|unique:captain_vehicles,registration_plate',
+            'brand' => ['nullable', 'min:2', 'max:20', Rule::in(OptionsController::GENDER)],
+            'model' => 'nullable|min:2|max:20',
+            'model_date' => ['nullable', Rule::in(OptionsController::YEARS)],
+            'color' => ['nullable', Rule::in(OptionsController::COLORS)],
+            'vehicle_license_expire_date' => 'nullable|date_format:Y-m-d|after:yesterday',
         ];
     }
 }
