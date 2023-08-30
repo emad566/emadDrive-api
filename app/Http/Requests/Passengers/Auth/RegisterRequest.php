@@ -38,6 +38,7 @@ class RegisterRequest extends APIRequest
             // Optional data
             'city_id' => 'nullable|numeric',
             'country_code' => 'nullable|min:2',
+            'email' => 'nullable|email|max:50|unique:passengers,email',
             'gender' => ['nullable', Rule::in(OptionsController::GENDER)],
         ];
     }

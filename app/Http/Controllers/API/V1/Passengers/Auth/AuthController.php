@@ -86,6 +86,7 @@ class AuthController extends Controller
                 'passenger_code' => generateRandomCode('PAS'),
                 'full_name' => $request->full_name,
                 'mobile' => $request->mobile,
+                'email' => $request->email,
                 'gender' => 'male',
                 'avatar' => $request->avatar,
                 'device_token' => $request->device_token,
