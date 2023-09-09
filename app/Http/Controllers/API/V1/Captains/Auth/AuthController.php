@@ -131,10 +131,10 @@ class AuthController extends Controller
             $vehicle = CaptainVehicle::create([
                 'captain_id'=>$captain->id,
                 'registration_plate' => $request->registration_plate,
-                'brand' => $request->brand,
-                'model' => $request->model,
+                'brand_id' => $request->brand_id,
+                'carmodel_id' => $request->carmodel_id,
                 'model_date' => $request->model_date,
-                'color' => $request->color,
+                'color_id' => $request->color_id,
                 'vehicle_front' => $request->vehicle_front,
                 'vehicle_back' => $request->vehicle_back,
                 'vehicle_left' => $request->vehicle_left,
