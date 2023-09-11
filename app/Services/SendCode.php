@@ -34,6 +34,6 @@ class SendCode {
             'verification_expiry_minutes'=>Carbon::now()->addMinute(2),
         ]);
 
-        return $this->respondWithItem( ['is_new'=> !(bool)$model], 'Send SMS Successfully Please Check Your Phone');
+        return $this->respondWithItem( ['is_new'=> !(bool)$model, 'full_name'=>$model?->full_name], 'Send SMS Successfully Please Check Your Phone');
     }
 }
