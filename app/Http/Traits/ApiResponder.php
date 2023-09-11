@@ -70,7 +70,7 @@ trait ApiResponder
     public function errorStatus($message = 'Failure Request')
     {
         return $this->respond([
-            'status' => 0,
+            'status' => false,
             'message' => __($message),
         ]);
     }

@@ -30,7 +30,7 @@ abstract class APIRequest extends FormRequest
      protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException($this->respond([
-            'status' => 0,
+            'status' => false,
             'message' => $validator->errors()->first()],
              200));
     }
