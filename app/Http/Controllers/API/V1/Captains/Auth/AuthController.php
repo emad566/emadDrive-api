@@ -46,13 +46,11 @@ class AuthController extends Controller
     {
         try {
 
-
-
             // Check OTP using Check::CheckCode -> if success false return error
             $response = Check::CheckCode($request);
 
-            if($response){
-                // Check if Model Old -> if new return response new user respondNewUser(true)
+            // Check if Model Old -> if new return response new user respondNewUser(true)
+            if($response['success']){
                 $captain = Captain::where('mobile', $request->mobile)->first();
                 if(!$captain) return  $this->respondWithItem(['is_new'=>true, 'user'=>null], __('Mobile number is not registered'));
             }
