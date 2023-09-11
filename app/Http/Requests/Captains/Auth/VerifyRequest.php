@@ -26,7 +26,7 @@ class VerifyRequest extends APIRequest
     public function rules()
     {
         return [
-            'mobile' => ['required', 'exists:verifies,mobile', new Phone],
+            'mobile' => ['required',],
             'verification_code' => 'required|numeric',
             'device_token'=>'required',
         ];

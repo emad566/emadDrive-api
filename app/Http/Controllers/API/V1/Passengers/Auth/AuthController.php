@@ -43,15 +43,17 @@ class AuthController extends Controller
     public function check(VerifyRequest $request)
     {
         try {
+            // Check if Passenger Old -> if new return response new user respondNewUser(true)
+            $passenger = Passenger::where('mobile', $request->mobile)->first();
+            if(!$passenger) return  $this->respondWithItem(['is_new'=>true, 'user'=>null], __('Mobile number is not registered'));
+
             // Check OTP using Check::CheckCode -> if success false return error
             $response = Check::CheckCode($request);
             if(!$response[ConstantController::SUCCESS]){
                 return $this->errorStatus($response[ConstantController::MESSAGE]);
             }
 
-            // Check if Passenger Old -> if new return response new user respondNewUser(true)
-            $passenger = Passenger::where('mobile', $request->mobile)->first();
-            if(!$passenger) return  $this->respondNewUser(true);
+
 
             // Update Token
             DB::beginTransaction();
@@ -64,7 +66,7 @@ class AuthController extends Controller
             DB::commit();
 
             // Return passenger Data
-            return $this->respondWithItem(PassengerHome::Details($passenger));
+            return $this->respondWithItem(['is_new'=>false, 'user'=>PassengerHome::Details($passenger)]);
         } catch (\Throwable $th) {
             return $this->errorInternalError(th: $th);
         }

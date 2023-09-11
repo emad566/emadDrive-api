@@ -8,8 +8,8 @@ trait ApiResponder
 {
 
     protected $statusCode = 200;
-    protected $success = 1;
-    protected $failure = 0;
+    protected $success = true;
+    protected $failure = false;
     protected $is_debug = false;
     protected $catch_error;
 
@@ -70,7 +70,7 @@ trait ApiResponder
     public function errorStatus($message = 'Failure Request')
     {
         return $this->respond([
-            'status' => 0,
+            'status' => false,
             'message' => __($message),
         ]);
     }
