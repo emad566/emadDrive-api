@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers\Api\V1\Captains;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
 
 Route::group(['namespace' => 'Captains'], function () {
     /* =========================== CMD =========================== */
