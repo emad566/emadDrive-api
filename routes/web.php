@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\V1\Captains\Auth\AuthController;
 use App\Http\Controllers\API\V1\Passengers\Profile\ProfileController;
+use http\Env\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,13 +17,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', function () {
+Route::post('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/pull', function () {
-    return shell_exec('git pull');
-})->name('home');
+
 
 Route::get('captain/verify/{token}', [AuthController::class,'verifyEmail'])->name('captain.verify');
 Route::get('passenger/verify/{token}', [ProfileController::class,'verifyEmail'])->name('passanger.verify');

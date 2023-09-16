@@ -43,17 +43,19 @@ class AuthController extends Controller
     public function check(VerifyRequest $request)
     {
         try {
-            // Check if Passenger Old -> if new return response new user respondNewUser(true)
-            $passenger = Passenger::where('mobile', $request->mobile)->first();
-            if(!$passenger) return  $this->respondWithItem(['is_new'=>true, 'user'=>null], __('Mobile number is not registered'));
 
             // Check OTP using Check::CheckCode -> if success false return error
             $response = Check::CheckCode($request);
+
+            // Check if Passenger Old -> if new return response new user respondNewUser(true)
+            if($response['success']){
+                $passenger = Passenger::where('mobile', $request->mobile)->first();
+                if(!$passenger) return  $this->respondWithItem(['is_new'=>true, 'user'=>null], __('Mobile number is not registered'));
+            }
+
             if(!$response[ConstantController::SUCCESS]){
                 return $this->errorStatus($response[ConstantController::MESSAGE]);
             }
-
-
 
             // Update Token
             DB::beginTransaction();

