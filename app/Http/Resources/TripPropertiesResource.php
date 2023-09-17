@@ -13,7 +13,7 @@ class TripPropertiesResource extends JsonResource
             'is_captain_in_trip' => $this->in_trip,
             'is_captain_available_for_trip' => $this->available,
             'properties' => Property::select(['id', getLangKey('title') . ' as title'])->active()->orderBy(getLangKey('title'), 'ASC')->get(),
-            'selected_properties_ids' => $this->tripProperties,
+            'selected_properties_ids' => $this->tripProperties->where('status', 1)->pluck('id')->toArray(),
         ];
     }
 }
