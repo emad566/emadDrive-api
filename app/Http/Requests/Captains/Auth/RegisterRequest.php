@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Captains\Auth;
 
 use App\Http\Controllers\API\V1\General\OptionController;
+use App\Http\Controllers\API\V1\General\RegController;
 use App\Rules\Phone;
 use App\Http\Controllers\API\V1\General\OptionsController;
 use Illuminate\Validation\Rule;
@@ -45,7 +46,7 @@ class RegisterRequest extends APIRequest
             'full_name' => 'nullable|min:3|max:30',
             'gender' => ['nullable', Rule::in(OptionsController::GENDER)],
             'birthday' => 'nullable|min:3|max:30',
-            'email' => 'nullable|email|max:50|unique:captains,email',
+            'email' => 'nullable|email|'.RegController::EMAIL.'|max:50|unique:captains,email',
             'password' => 'nullable|min:6|max:10',
             'city' => 'nullable|min:4|max:30',
             'national_expiry_date' => 'nullable|date_format:Y-m-d|after:yesterday',

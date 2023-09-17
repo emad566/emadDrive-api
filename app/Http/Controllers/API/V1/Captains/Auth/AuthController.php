@@ -44,11 +44,12 @@ class AuthController extends Controller
 
     public function check(VerifyRequest $request)
     {
+
         try {
 
             // Check OTP using Check::CheckCode -> if success false return error
             $response = Check::CheckCode($request);
-
+            return  $response;
             // Check if Model Old -> if new return response new user respondNewUser(true)
             if($response['success']){
                 $captain = Captain::where('mobile', $request->mobile)->first();

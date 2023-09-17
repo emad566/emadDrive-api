@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Passengers\Auth;
 
 use App\Http\Controllers\API\V1\General\OptionsController;
+use App\Http\Controllers\API\V1\General\RegController;
 use App\Rules\Phone;
 use Illuminate\Validation\Rule;
 use App\Http\Requests\APIRequest;
@@ -38,7 +39,7 @@ class RegisterRequest extends APIRequest
             // Optional data
             'city_id' => 'nullable|numeric',
             'country_code' => 'nullable|min:2',
-            'email' => 'nullable|email|max:50|unique:passengers,email',
+            'email' => 'nullable|email|'.RegController::EMAIL.'|max:50|unique:passengers,email',
             'gender' => ['nullable', Rule::in(OptionsController::GENDER)],
         ];
     }

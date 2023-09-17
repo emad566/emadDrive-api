@@ -18,7 +18,6 @@ class Check
         $response['success'] = true;
         $verify = Verify::whereMobile($request->mobile)->latest()->first();
 
-
         if (empty($verify?->verification_code)) {
             $response['success'] = false;
             if($request->header('Accept-Language')=='ar'){
@@ -28,8 +27,7 @@ class Check
                 $response['message'] = 'Verification code is missing';
             }
         }
-
-        if ($verify?->verification_code != $request->verification_code) {
+        if ($verify?->verification_code !== $request->verification_code) {
             $response['success'] = false;
             if($request->header('Accept-Language')=='ar'){
                 $response['message'] = 'رمز التحقيق خطأ';

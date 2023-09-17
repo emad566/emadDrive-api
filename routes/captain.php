@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers\Api\V1\Captains;
+use App\Http\Controllers\API\V1\Captains\Trip\TripController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -23,9 +24,14 @@ Route::group(['namespace' => 'Captains'], function () {
     });
     /* =========================== \Auth =========================== */
 
-    /* =========================== Home =========================== */
     Route::group(['middleware' => ['auth:captain', 'scope:allow-captain']], function () {
-        Route::GET('details', 'HomeController@details');
+        /* =========================== Home =========================== */
+            Route::GET('details', 'HomeController@details');
+        /* =========================== \Home =========================== */
+
+        /* =========================== Trip =========================== */
+            Route::GET('trip-properties', [TripController::class, 'properties']);
+        /* =========================== \Trip =========================== */
     });
-    /* =========================== \Home =========================== */
+
 });
