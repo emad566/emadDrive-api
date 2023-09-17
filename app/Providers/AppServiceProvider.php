@@ -2,12 +2,9 @@
 
 namespace App\Providers;
 
-use App\Models\Passenger;
-use App\Models\BusinessGroupMember;
-use App\Observers\PassengerObserver;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Mockery\Generator\StringManipulation\Pass\Pass;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +25,39 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(191);
 
+        Builder::macro('search', function ($field, $string) {
+            return $string ? $this->where($field, 'like', '%'.$string.'%') : $this;
+        });
+
+        Builder::macro('orSearch', function ($field, $string) {
+            return $string ? $this->orWhere($field, 'like', '%'.$string.'%') : $this;
+        });
+
+        Builder::macro('active', function () {
+            return $this->where('status', 1);
+        });
+
+        Builder::macro('inActive', function () {
+            return $this->where('status', 0);
+        });
+
+        Builder::macro('available', function () {
+            return $this->where('available', 1);
+        });
+
+        Builder::macro('inAvailable', function () {
+            return $this->where('available', 0);
+        });
+
+
+        Builder::macro('onActive', function () {
+            return $this->where('is_active', 1);
+        });
+
+        Builder::macro('offActive', function () {
+            return $this->where('is_active', 0);
+        });
     }
 }

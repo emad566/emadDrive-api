@@ -42,7 +42,7 @@ class RegisterRequest extends APIRequest
             'driving_license_front' => 'required|min:3|max:191',
             'is_dark_mode' => 'nullable|min:0|max:1',
 
-            // Optional Fields fields
+            // Optional Fields
             'full_name' => 'nullable|min:3|max:30',
             'gender' => ['nullable', Rule::in(OptionsController::GENDER)],
             'birthday' => 'nullable|min:3|max:30',

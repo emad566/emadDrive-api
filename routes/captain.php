@@ -30,7 +30,7 @@ Route::group(['namespace' => 'Captains'], function () {
         /* =========================== \Home =========================== */
 
         /* =========================== Trip =========================== */
-            Route::GET('trip-properties', [TripController::class, 'properties']);
+            Route::POST('trip-properties', [TripController::class, 'properties']);
         /* =========================== \Trip =========================== */
     });
 

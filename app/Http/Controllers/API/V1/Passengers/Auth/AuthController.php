@@ -9,7 +9,6 @@ use App\Models\Passenger;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Passengers\Auth\LoginRequest;
 use App\Http\Requests\Passengers\Auth\VerifyRequest;
-use App\Http\Resources\PassengerResource;
 use App\Http\Requests\Passengers\Auth\RegisterRequest;
 use App\Services\Check;
 use App\Services\UpdateToken;

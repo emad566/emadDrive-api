@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers\API\V1\Captains\Auth;
 
-use App\Http\Resources\CaptainResource;
 use App\Models\Captain;
 use App\Services\CaptainHome;
 use App\Services\SendCode;
 use App\Services\UpdateToken;
 use App\Services\Check;
-use App\Jobs\SendNotification;
 use App\Models\CaptainVehicle;
 use App\Models\CaptainBankAccount;
-use App\Models\CaptainDocument;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -20,9 +17,7 @@ use App\Http\Requests\Captains\Auth\VerifyRequest;
 use App\Http\Requests\Captains\Auth\BankAccountRequest;
 use App\Http\Requests\Captains\Auth\RegisterRequest;
 use App\Http\Controllers\API\V1\General\ConstantController;
-use App\Http\Controllers\API\V1\General\TypeConstant;
 use App\Http\Requests\Captains\Auth\RegisterVehicleRequest;
-use App\Models\CaptainWallet;
 
 class AuthController extends Controller
 {

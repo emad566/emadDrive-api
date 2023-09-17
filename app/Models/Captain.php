@@ -25,6 +25,16 @@ class Captain extends Authenticatable
         return getFLName($this->full_name);
     }
 
+    public function getAvailableAttribute($value): bool
+    {
+        return (bool)$value;
+    }
+
+    public function getInTripAttribute($value): bool
+    {
+        return (bool)$value;
+    }
+
     /**
      * Get  token of Captain.
      */

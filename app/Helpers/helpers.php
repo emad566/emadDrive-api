@@ -2,7 +2,13 @@
 
 use App\Models\Language;
 use Carbon\Carbon;
-
+function getLangKey($key): string
+{
+    return getLocal() . "_$key";
+}
+function getLocal(){
+    return session()->get('locale')?? 'en';
+}
 
 
 if (!function_exists('CalcMinutesOfTrip')) {
