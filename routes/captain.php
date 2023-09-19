@@ -31,6 +31,7 @@ Route::group(['namespace' => 'Captains'], function () {
 
         /* =========================== Trip =========================== */
             Route::POST('trip-properties', [TripController::class, 'properties']);
+            Route::POST('firebase', [TripController::class, 'firebase']);
         /* =========================== \Trip =========================== */
     });
 
